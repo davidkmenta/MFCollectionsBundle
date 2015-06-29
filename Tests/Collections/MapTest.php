@@ -231,4 +231,22 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->map->contains($keyExists));
         $this->assertFalse($this->map->contains($keyDoesntExist));
     }
+
+    public function testShouldRemoveItem()
+    {
+        $key = 'key';
+        $key2 = 'key2';
+
+        $this->map->set($key, 'value');
+        $this->assertTrue($this->map->contains($key));
+
+        $this->map[$key2] = 'value2';
+        $this->assertTrue($this->map->contains($key2));
+
+        $this->map->remove($key);
+        $this->assertFalse($this->map->contains($key));
+
+        unset($this->map[$key2]);
+        $this->assertFalse($this->map->contains($key2));
+    }
 }

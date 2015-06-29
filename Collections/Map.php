@@ -4,6 +4,7 @@ namespace MFCollectionsBundle\Collections;
 
 class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Countable
 {
+    /** @var array */
     private $map;
 
     public function __construct()
@@ -101,17 +102,19 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
+     * @param mixed $offset
      */
     public function offsetUnset($offset)
     {
-        // TODO: Implement offsetUnset() method.
+        $this->remove($offset);
+    }
+
+    /**
+     * @param mixed $key
+     */
+    public function remove($key)
+    {
+        unset($this->map[$key]);
     }
 
     /**
