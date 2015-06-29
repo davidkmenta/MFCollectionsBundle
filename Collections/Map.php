@@ -163,4 +163,21 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
             throw new \InvalidArgumentException('Callback must be callable');
         }
     }
+
+    /**
+     * @param callable(key:mixed, value:mixed):mixed $callback
+     * @return Map
+     */
+    public function map($callback)
+    {
+        $this->assertCallback($callback);
+
+        $newMap = self::createFromArray($this->mapArray);
+
+        foreach($newMap as $key => $value) {
+            $newMap->set($key, $callback($key, $value));
+        }
+
+        return $newMap;
+    }
 }

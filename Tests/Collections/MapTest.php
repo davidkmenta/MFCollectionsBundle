@@ -264,4 +264,24 @@ class MapTest extends \PHPUnit_Framework_TestCase
             }
         });
     }
+
+    public function testShouldMapItemsToNewMap()
+    {
+        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+        
+        $newMap = $map->map(function ($key, $value) {
+            if ($key === 1) {
+                $this->assertEquals('one', $value);
+            } elseif ($key === 2) {
+                $this->assertEquals('two', $value);
+            } elseif ($key === 'three') {
+                $this->assertEquals(3, $value);
+            }
+
+            return $key . $value;
+        });
+
+        $this->assertNotEquals($map, $newMap);
+        $this->assertEquals([1 => '1one', 2 => '2two', 'three' => 'three3'], $newMap->toArray());
+    }
 }
