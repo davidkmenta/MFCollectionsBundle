@@ -102,17 +102,11 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
+     * @return int
      */
     public function count()
     {
-        // TODO: Implement count() method.
+        return count($this->map);
     }
 
     /**

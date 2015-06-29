@@ -195,4 +195,26 @@ class MapTest extends \PHPUnit_Framework_TestCase
             $i++;
         }
     }
+
+    /**
+     * @param array $array
+     *
+     * @dataProvider arrayProvider
+     */
+    public function testShouldGetCount(array $array)
+    {
+        $originalCount = count($array);
+        $map = Map::createFromArray($array);
+
+        $this->assertCount($originalCount, $map);
+
+        $map->set('key', 'value');
+        $this->assertCount($originalCount + 1, $map);
+
+        $map['key'] = 'value X';
+        $this->assertCount($originalCount + 1, $map);
+
+        $map['keyY'] = 'value Y';
+        $this->assertCount($originalCount + 2, $map);
+    }
 }
