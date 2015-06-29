@@ -199,4 +199,12 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
 
         return $newMap;
     }
+
+    /**
+     * @return array
+     */
+    public function getKeys()
+    {
+        return array_keys($this->mapArray);
+    }
 }

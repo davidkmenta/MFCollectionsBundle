@@ -327,4 +327,11 @@ class MapTest extends \PHPUnit_Framework_TestCase
     {
         $this->map->filter(1);
     }
+
+    public function testShouldGetKeys()
+    {
+        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+
+        $this->assertEquals([1, 2, 'three'], $map->getKeys());
+    }
 }
