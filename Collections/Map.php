@@ -180,4 +180,23 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
 
         return $newMap;
     }
+
+    /**
+     * @param callable(key:mixed, value:mixed):bool $callback
+     * @return Map
+     */
+    public function filter($callback)
+    {
+        $this->assertCallback($callback);
+
+        $newMap = new self();
+
+        foreach($this->mapArray as $key => $value) {
+            if ($callback($key, $value)) {
+                $newMap->set($key, $value);
+            }
+        }
+
+        return $newMap;
+    }
 }
