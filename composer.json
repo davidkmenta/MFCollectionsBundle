@@ -1,0 +1,15 @@
+{
+    "name": "mf/collections-bundle",
+    "type": "bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Petr Chromec",
+            "email": "mortal_flesh@seznam.cz"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^4.7"
+    }
+}
