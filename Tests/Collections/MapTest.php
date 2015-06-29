@@ -268,7 +268,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
     public function testShouldMapItemsToNewMap()
     {
         $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
-        
+
         $newMap = $map->map(function ($key, $value) {
             if ($key === 1) {
                 $this->assertEquals('one', $value);
@@ -302,5 +302,29 @@ class MapTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->assertEquals(['three' => 3], $newMap->toArray());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testShouldThrowInvalidArgumentExceptionOnSettingNotCallableCallbackToEach()
+    {
+        $this->map->each(1);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testShouldThrowInvalidArgumentExceptionOnSettingNotCallableCallbackToMap()
+    {
+        $this->map->map(1);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testShouldThrowInvalidArgumentExceptionOnSettingNotCallableCallbackToFilter()
+    {
+        $this->map->filter(1);
     }
 }
