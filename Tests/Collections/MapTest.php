@@ -217,4 +217,18 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $map['keyY'] = 'value Y';
         $this->assertCount($originalCount + 2, $map);
     }
+
+    public function testShouldHasKeys()
+    {
+        $keyExists = 'has-key';
+        $keyDoesntExist = 'has-no-key';
+
+        $this->map->set($keyExists, 'value');
+
+        $this->assertArrayHasKey($keyExists, $this->map);
+        $this->assertArrayNotHasKey($keyDoesntExist, $this->map);
+
+        $this->assertTrue($this->map->contains($keyExists));
+        $this->assertFalse($this->map->contains($keyDoesntExist));
+    }
 }
