@@ -2,9 +2,7 @@
 
 namespace MFCollectionsBundle\Collections;
 
-use Traversable;
-
-class Map implements \ArrayAccess, \IteratorAggregate, \Countable
+class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Countable
 {
     private $map;
 
@@ -14,10 +12,30 @@ class Map implements \ArrayAccess, \IteratorAggregate, \Countable
     }
 
     /**
+     * @param array $array
+     * @param bool $recursive
+     * @return Map
+     */
+    public static function createFromArray(array $array, $recursive = false)
+    {
+        $map = new self();
+
+        foreach ($array as $key => $value) {
+            if ($recursive && is_array($value)) {
+                $map->set($key, self::createFromArray($value, true));
+            } else {
+                $map->set($key, $value);
+            }
+        }
+
+        return $map;
+    }
+
+    /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Retrieve an external iterator
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
+     * @return \Traversable An instance of an object implementing <b>Iterator</b> or
      * <b>Traversable</b>
      */
     public function getIterator()
@@ -53,7 +71,7 @@ class Map implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function offsetGet($offset)
     {
-        // TODO: Implement offsetGet() method.
+        return $this->get($offset);
     }
 
     /**
@@ -70,7 +88,7 @@ class Map implements \ArrayAccess, \IteratorAggregate, \Countable
      */
     public function offsetSet($offset, $value)
     {
-        // TODO: Implement offsetSet() method.
+        $this->set($offset, $value);
     }
 
     /**
@@ -99,5 +117,43 @@ class Map implements \ArrayAccess, \IteratorAggregate, \Countable
     public function count()
     {
         // TODO: Implement count() method.
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $value
+     */
+    public function set($key, $value)
+    {
+        if (is_object($key)) {
+            throw new \InvalidArgumentException('Key cannot be an Object');
+        }
+        if (is_array($key)) {
+            throw new \InvalidArgumentException('Key cannot be an Array');
+        }
+
+        $this->map[$key] = $value;
+    }
+
+    public function get($key)
+    {
+        return $this->map[$key];
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $array = [];
+        foreach ($this->map as $key => $value) {
+            if ($value instanceof CollectionInterface) {
+                $value = $value->toArray();
+            }
+
+            $array[$key] = $value;
+        }
+
+        return $array;
     }
 }
