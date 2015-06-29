@@ -174,7 +174,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
 
         $newMap = self::createFromArray($this->mapArray);
 
-        foreach($newMap as $key => $value) {
+        foreach ($newMap as $key => $value) {
             $newMap->set($key, $callback($key, $value));
         }
 
@@ -191,7 +191,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
 
         $newMap = new self();
 
-        foreach($this->mapArray as $key => $value) {
+        foreach ($this->mapArray as $key => $value) {
             if ($callback($key, $value)) {
                 $newMap->set($key, $value);
             }
@@ -203,8 +203,16 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     /**
      * @return array
      */
-    public function getKeys()
+    public function keys()
     {
         return array_keys($this->mapArray);
+    }
+
+    /**
+     * @return array
+     */
+    public function values()
+    {
+        return array_values($this->mapArray);
     }
 }
