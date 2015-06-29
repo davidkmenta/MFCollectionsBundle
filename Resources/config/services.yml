@@ -1,4 +1,3 @@
 services:
-#    collections.example:
-#        class: MFCollectionsBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    mf.collections.Map:
+        class: MFCollectionsBundle\Collections\Map

@@ -1,3 +1,0 @@
-collections_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: CollectionsBundle:Default:index }
