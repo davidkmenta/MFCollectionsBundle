@@ -249,4 +249,19 @@ class MapTest extends \PHPUnit_Framework_TestCase
         unset($this->map[$key2]);
         $this->assertFalse($this->map->contains($key2));
     }
+
+    public function testShouldForeachItemInMap()
+    {
+        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+
+        $map->each(function ($key, $value) {
+            if ($key === 1) {
+                $this->assertEquals('one', $value);
+            } elseif ($key === 2) {
+                $this->assertEquals('two', $value);
+            } elseif ($key === 'three') {
+                $this->assertEquals(3, $value);
+            }
+        });
+    }
 }

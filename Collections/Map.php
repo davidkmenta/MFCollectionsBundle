@@ -5,11 +5,11 @@ namespace MFCollectionsBundle\Collections;
 class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Countable
 {
     /** @var array */
-    private $map;
+    private $mapArray;
 
     public function __construct()
     {
-        $this->map = [];
+        $this->mapArray = [];
     }
 
     /**
@@ -37,7 +37,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->map);
+        return new \ArrayIterator($this->mapArray);
     }
 
     /**
@@ -55,7 +55,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
      */
     public function contains($key)
     {
-        return array_key_exists($key, $this->map);
+        return array_key_exists($key, $this->mapArray);
     }
 
     /**
@@ -73,7 +73,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
      */
     public function get($key)
     {
-        return $this->map[$key];
+        return $this->mapArray[$key];
     }
 
     /**
@@ -98,7 +98,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
             throw new \InvalidArgumentException('Key cannot be an Array');
         }
 
-        $this->map[$key] = $value;
+        $this->mapArray[$key] = $value;
     }
 
     /**
@@ -114,7 +114,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
      */
     public function remove($key)
     {
-        unset($this->map[$key]);
+        unset($this->mapArray[$key]);
     }
 
     /**
@@ -122,7 +122,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
      */
     public function count()
     {
-        return count($this->map);
+        return count($this->mapArray);
     }
 
     /**
@@ -131,7 +131,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     public function toArray()
     {
         $array = [];
-        foreach ($this->map as $key => $value) {
+        foreach ($this->mapArray as $key => $value) {
             if ($value instanceof CollectionInterface) {
                 $value = $value->toArray();
             }
@@ -140,5 +140,27 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
         }
 
         return $array;
+    }
+
+    /**
+     * @param callable(key:mixed, value:mixed):void $callback
+     */
+    public function each($callback)
+    {
+        $this->assertCallback($callback);
+
+        foreach ($this->mapArray as $key => $value) {
+            $callback($key, $value);
+        }
+    }
+
+    /**
+     * @param callable $callback
+     */
+    private function assertCallback($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Callback must be callable');
+        }
     }
 }
