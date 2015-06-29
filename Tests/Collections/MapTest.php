@@ -175,4 +175,24 @@ class MapTest extends \PHPUnit_Framework_TestCase
             ['key' => []],
         ];
     }
+
+    public function testShouldIterateThroughMap()
+    {
+        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+
+        $i = 0;
+        foreach ($map as $key => $value) {
+            if ($i === 0) {
+                $this->assertEquals(1, $key);
+                $this->assertEquals('one', $value);
+            } elseif ($i === 1) {
+                $this->assertEquals(2, $key);
+                $this->assertEquals('two', $value);
+            } elseif ($i === 2) {
+                $this->assertEquals('three', $key);
+                $this->assertEquals(3, $value);
+            }
+            $i++;
+        }
+    }
 }
