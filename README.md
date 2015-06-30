@@ -3,6 +3,12 @@
 ## Map
 
 Implements: `ArrayAcces, IteratorAggregate, Countable`
+Can have associated keys
+
+## List
+
+Implements: `ArrayAcces, IteratorAggregate, Countable`
+Have just values
 
 ## Bundle for Symfony2 which allows to use Collections as follows:
 
