@@ -2,14 +2,20 @@
 
 namespace MFCollectionsBundle\Collections;
 
+use MFCollectionsBundle\Services\Parsers\CallbackParser;
+
 class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Countable
 {
     /** @var array */
     private $mapArray;
 
+    /** @var CallbackParser */
+    private $callbackParser;
+
     public function __construct()
     {
         $this->mapArray = [];
+        $this->callbackParser = new CallbackParser();
     }
 
     /**
@@ -170,6 +176,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
      */
     public function map($callback)
     {
+        $callback = $this->callbackParser->parseArrayFunc($callback);
         $this->assertCallback($callback);
 
         $newMap = self::createFromArray($this->mapArray);
@@ -187,6 +194,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
      */
     public function filter($callback)
     {
+        $callback = $this->callbackParser->parseArrayFunc($callback);
         $this->assertCallback($callback);
 
         $newMap = new self();
