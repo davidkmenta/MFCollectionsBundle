@@ -2,6 +2,7 @@
     "name": "mf/collections-bundle",
     "type": "bundle",
     "license": "MIT",
+    "version": "0.1.1",
     "authors": [
         {
             "name": "Petr Chromec",
@@ -9,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.5.*",
+        "php": ">=5.5",
         "symfony/framework-bundle": "~2.3"
     },
     "autoload": {
