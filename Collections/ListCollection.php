@@ -2,104 +2,162 @@
 
 namespace MFCollectionsBundle\Collections;
 
-use Traversable;
-
-class ListCollection implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Countable
+class ListCollection implements CollectionInterface, \IteratorAggregate, \Countable
 {
     /** @var array */
     private $listArray;
 
+    public function __construct()
+    {
+        $this->listArray = [];
+    }
+
+    /**
+     * @param array $array
+     * @param bool $recursive
+     * @return ListCollection
+     */
+    public static function createFromArray(array $array, $recursive = false)
+    {
+        $map = new self();
+
+        foreach ($array as $key => $value) {
+            if ($recursive && is_array($value)) {
+                $map->add(self::createFromArray($value, true));
+            } else {
+                $map->add($value);
+            }
+        }
+
+        return $map;
+    }
+
     /** @return array */
     public function toArray()
     {
-        // TODO: Implement toArray() method.
+        $array = [];
+        foreach ($this->listArray as $value) {
+            if ($value instanceof CollectionInterface) {
+                $value = $value->toArray();
+            }
+
+            $array[] = $value;
+        }
+
+        return $array;
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Retrieve an external iterator
-     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
-     * @return Traversable An instance of an object implementing <b>Iterator</b> or
-     * <b>Traversable</b>
+     * @return \ArrayIterator
      */
     public function getIterator()
     {
-        // TODO: Implement getIterator() method.
+        return new \ArrayIterator($this->listArray);
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
+     * @param mixed $value
      */
-    public function offsetExists($offset)
+    public function add($value)
     {
-        // TODO: Implement offsetExists() method.
+        $this->listArray[] = $value;
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
+     * @param mixed $value
      */
-    public function offsetGet($offset)
+    public function unshift($value)
     {
-        // TODO: Implement offsetGet() method.
+        array_unshift($this->listArray, $value);
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
+     * @return mixed
      */
-    public function offsetSet($offset, $value)
+    public function pop()
     {
-        // TODO: Implement offsetSet() method.
+        return array_pop($this->listArray);
     }
 
     /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
+     * @return mixed
      */
-    public function offsetUnset($offset)
+    public function shift()
     {
-        // TODO: Implement offsetUnset() method.
+        return array_shift($this->listArray);
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
-     * </p>
-     * <p>
-     * The return value is cast to an integer.
+     * @return mixed
+     */
+    public function first()
+    {
+        $list = $this->listArray;
+
+        return array_shift($list);
+    }
+
+    public function last()
+    {
+        $list = $this->listArray;
+
+        return array_pop($list);
+    }
+
+    /**
+     * @return ListCollection
+     */
+    public function sort()
+    {
+        $sortedMap = $this->listArray;
+        sort($sortedMap);
+
+        return self::createFromArray($sortedMap);
+    }
+
+    /**
+     * @return int
      */
     public function count()
     {
-        // TODO: Implement count() method.
+        return count($this->listArray);
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    public function contains($value)
+    {
+        return $this->find($value) !== false;
+    }
+
+    /**
+     * @param mixed $value
+     * @return int|false
+     */
+    private function find($value)
+    {
+        return array_search($value, $this->listArray, true);
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function removeFirst($value)
+    {
+        $index = $this->find($value);
+
+        if ($index !== false) {
+            unset($this->listArray[$index]);
+        }
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function removeAll($value)
+    {
+        throw new \Exception('Not implemented yet');
     }
 }
