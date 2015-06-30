@@ -9,17 +9,6 @@ class CallbackParser
     const ARGUMENT_SEPARATOR = ',';
     const ARRAY_FUNCTION_OPERATOR = '=>';
 
-    /** @var bool */
-    private $debug = true;
-
-    /**
-     * @param bool $debug
-     */
-    public function setDebug($debug)
-    {
-        $this->debug = $debug;
-    }
-
     /**
      * @param string $func
      * @return callable
@@ -59,7 +48,7 @@ class CallbackParser
      */
     private function assertString($string)
     {
-        if ($this->debug && !is_string($string) || empty($string)) {
+        if (!is_string($string) || empty($string)) {
             throw new \InvalidArgumentException('Array function has to be string');
         }
     }
@@ -69,7 +58,7 @@ class CallbackParser
      */
     private function assertSyntax($string)
     {
-        if ($this->debug && !preg_match(self::FUNCTION_REGEX, $string)) {
+        if (!preg_match(self::FUNCTION_REGEX, $string)) {
             throw new \InvalidArgumentException('Array function is not in right format');
         }
     }
@@ -79,10 +68,6 @@ class CallbackParser
      */
     private function assertParamsSytax(array $params)
     {
-        if (!$this->debug) {
-            return;
-        }
-
         foreach ($params as $param) {
             if (!empty($param) && !preg_match(self::PARAM_REGEX, $param)) {
                 throw new \InvalidArgumentException('Params are not in right format');
@@ -95,7 +80,7 @@ class CallbackParser
      */
     private function assertCallable($callback)
     {
-        if ($this->debug && !is_callable($callback)) {
+        if (!is_callable($callback)) {
             throw new \InvalidArgumentException('Given string is not in right format');
         }
     }
