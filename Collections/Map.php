@@ -5,7 +5,7 @@ namespace MFCollectionsBundle\Collections;
 class Map implements MapInterface
 {
     /** @var array */
-    protected $mapArray;
+    private $mapArray;
 
     public function __construct()
     {
@@ -161,7 +161,7 @@ class Map implements MapInterface
     }
 
     /**
-     * @param callable (key:mixed, value:mixed):void $callback
+     * @param callable(key:mixed,value:mixed):void $callback
      */
     public function each($callback)
     {
@@ -175,7 +175,7 @@ class Map implements MapInterface
     /**
      * @param callable $callback
      */
-    protected function assertCallback($callback)
+    private function assertCallback($callback)
     {
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException('Callback must be callable');
@@ -183,16 +183,16 @@ class Map implements MapInterface
     }
 
     /**
-     * @param callable (key:mixed, value:mixed):mixed $callback
+     * @param callable(key:mixed,value:mixed):mixed $callback
      * @return static
      */
     public function map($callback)
     {
         $this->assertCallback($callback);
 
-        $newMap = static::createFromArray($this->mapArray);
+        $newMap = new static();
 
-        foreach ($newMap as $key => $value) {
+        foreach ($this->mapArray as $key => $value) {
             $newMap->set($key, $callback($key, $value));
         }
 
@@ -200,7 +200,7 @@ class Map implements MapInterface
     }
 
     /**
-     * @param callable (key:mixed, value:mixed):bool $callback
+     * @param callable(key:mixed,value:mixed):bool $callback
      * @return static
      */
     public function filter($callback)

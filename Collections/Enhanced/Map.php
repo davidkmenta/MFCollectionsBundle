@@ -16,7 +16,7 @@ class Map extends \MFCollectionsBundle\Collections\Map
     }
 
     /**
-     * @param callable (key:mixed, value:mixed):mixed $callback
+     * @param callable(key:mixed,value:mixed):mixed $callback
      * @return static
      */
     public function map($callback)
@@ -26,7 +26,7 @@ class Map extends \MFCollectionsBundle\Collections\Map
     }
 
     /**
-     * @param callable (key:mixed, value:mixed):bool $callback
+     * @param callable(key:mixed,value:mixed):bool $callback
      * @return static
      */
     public function filter($callback)

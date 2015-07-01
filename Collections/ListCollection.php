@@ -19,11 +19,11 @@ class ListCollection implements ListInterface
      */
     public static function createFromArray(array $array, $recursive = false)
     {
-        $map = new self();
+        $map = new static();
 
         foreach ($array as $key => $value) {
             if ($recursive && is_array($value)) {
-                $map->add(self::createFromArray($value, true));
+                $map->add(static::createFromArray($value, true));
             } else {
                 $map->add($value);
             }
@@ -97,6 +97,9 @@ class ListCollection implements ListInterface
         return array_shift($list);
     }
 
+    /**
+     * @return mixed
+     */
     public function last()
     {
         $list = $this->listArray;
@@ -105,14 +108,14 @@ class ListCollection implements ListInterface
     }
 
     /**
-     * @return ListCollection
+     * @return static
      */
     public function sort()
     {
         $sortedMap = $this->listArray;
         sort($sortedMap);
 
-        return self::createFromArray($sortedMap);
+        return static::createFromArray($sortedMap);
     }
 
     /**
@@ -189,5 +192,61 @@ class ListCollection implements ListInterface
                 $this->listArray[] = $val;
             }
         }
+    }
+
+    /** @param callable(value:mixed,index:int):void $callback */
+    public function each($callback)
+    {
+        $this->assertCallback($callback);
+
+        foreach ($this->listArray as $i => $value) {
+            $callback($value, $i);
+        }
+    }
+
+    /**
+     * @param callable $callback
+     */
+    private function assertCallback($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Callback must be callable');
+        }
+    }
+
+    /**
+     * @param callable(value:mixed,index:int):mixed $callback
+     * @return static
+     */
+    public function map($callback)
+    {
+        $this->assertCallback($callback);
+
+        $newList = new static();
+
+        foreach ($this->listArray as $i => $value) {
+            $newList->add($callback($value, $i));
+        }
+
+        return $newList;
+    }
+
+    /**
+     * @param callable(value:mixed,index:int):bool $callback
+     * @return static
+     */
+    public function filter($callback)
+    {
+        $this->assertCallback($callback);
+
+        $list = new static();
+
+        foreach ($this->listArray as $i => $value) {
+            if ($callback($value, $i)) {
+                $list->add($value);
+            }
+        }
+
+        return $list;
     }
 }

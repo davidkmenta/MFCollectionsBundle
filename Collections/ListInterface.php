@@ -22,10 +22,13 @@ interface ListInterface extends CollectionInterface, \IteratorAggregate, \Counta
     /** @return mixed */
     public function last();
 
-    /** @return mixed */
+    /** @return static */
     public function sort();
 
-    /** @param mixed $value */
+    /**
+     * @param mixed $value
+     * @return bool
+     */
     public function contains($value);
 
     /** @param mixed $value */

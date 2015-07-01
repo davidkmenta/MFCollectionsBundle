@@ -271,4 +271,82 @@ class ListTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals($list, $sortedList);
         $this->assertEquals([1, 2, 3, 4, 4, 4, 5], $sortedList->toArray());
     }
+
+    public function testShouldForeachItemInMap()
+    {
+        $list = ListCollection::createFromArray(['one', 'two', 3]);
+
+        $list->each(function ($value, $i) {
+            if ($i === 0) {
+                $this->assertEquals('one', $value);
+            } elseif ($i === 1) {
+                $this->assertEquals('two', $value);
+            } elseif ($i === 1) {
+                $this->assertEquals(3, $value);
+            }
+        });
+    }
+
+    public function testShouldMapItemsToNewMap()
+    {
+        $list = ListCollection::createFromArray(['one', 'two', 3]);
+
+        $newList = $list->map(function ($value, $i) {
+            if ($i === 0) {
+                $this->assertEquals('one', $value);
+            } elseif ($i === 1) {
+                $this->assertEquals('two', $value);
+            } elseif ($i === 2) {
+                $this->assertEquals(3, $value);
+            }
+
+            return $i . $value;
+        });
+
+        $this->assertNotEquals($list, $newList);
+        $this->assertEquals([0 => '0one', 1 => '1two', 2 => '23'], $newList->toArray());
+    }
+
+    public function testShouldFilterMapToNewMap()
+    {
+        $list = ListCollection::createFromArray(['one', 'two', 3]);
+
+        $newList = $list->filter(function ($value, $i) {
+            if ($i === 0) {
+                $this->assertEquals('one', $value);
+            } elseif ($i === 1) {
+                $this->assertEquals('two', $value);
+            } elseif ($i === 2) {
+                $this->assertEquals(3, $value);
+            }
+
+            return is_string($value);
+        });
+
+        $this->assertEquals([0 => 'one', 1 => 'two'], $newList->toArray());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testShouldThrowInvalidArgumentExceptionOnSettingNotCallableCallbackToEach()
+    {
+        $this->list->each(1);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testShouldThrowInvalidArgumentExceptionOnSettingNotCallableCallbackToMap()
+    {
+        $this->list->map(1);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testShouldThrowInvalidArgumentExceptionOnSettingNotCallableCallbackToFilter()
+    {
+        $this->list->filter(1);
+    }
 }

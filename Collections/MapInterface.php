@@ -37,24 +37,6 @@ interface MapInterface extends CollectionInterface, \ArrayAccess, \IteratorAggre
     /** @param mixed $key */
     public function remove($key);
 
-    /**
-     * @param callable $callback
-     * @return MapInterface
-     */
-    public function each($callback);
-
-    /**
-     * @param callable $callback
-     * @return MapInterface
-     */
-    public function map($callback);
-
-    /**
-     * @param callable $callback
-     * @return MapInterface
-     */
-    public function filter($callback);
-
     /** @return ListInterface */
     public function keys();
 
