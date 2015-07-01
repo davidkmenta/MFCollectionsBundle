@@ -2,34 +2,28 @@
 
 namespace MFCollectionsBundle\Collections;
 
-use MFCollectionsBundle\Services\Parsers\CallbackParser;
-
-class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Countable
+class Map implements MapInterface
 {
     /** @var array */
-    private $mapArray;
-
-    /** @var CallbackParser */
-    private $callbackParser;
+    protected $mapArray;
 
     public function __construct()
     {
         $this->mapArray = [];
-        $this->callbackParser = new CallbackParser();
     }
 
     /**
      * @param array $array
      * @param bool $recursive
-     * @return Map
+     * @return static
      */
     public static function createFromArray(array $array, $recursive = false)
     {
-        $map = new self();
+        $map = new static();
 
         foreach ($array as $key => $value) {
             if ($recursive && is_array($value)) {
-                $map->set($key, self::createFromArray($value, true));
+                $map->set($key, static::createFromArray($value, true));
             } else {
                 $map->set($key, $value);
             }
@@ -52,16 +46,34 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
      */
     public function offsetExists($offset)
     {
-        return $this->contains($offset);
+        return $this->containsKey($offset);
     }
 
     /**
      * @param mixed $key
      * @return bool
      */
-    public function contains($key)
+    public function containsKey($key)
     {
         return array_key_exists($key, $this->mapArray);
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    public function contains($value)
+    {
+        return $this->find($value) !== false;
+    }
+
+    /**
+     * @param $value
+     * @return mixed|false
+     */
+    public function find($value)
+    {
+        return array_search($value, $this->mapArray, true);
     }
 
     /**
@@ -149,7 +161,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     }
 
     /**
-     * @param callable(key:mixed, value:mixed):void $callback
+     * @param callable (key:mixed, value:mixed):void $callback
      */
     public function each($callback)
     {
@@ -163,7 +175,7 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     /**
      * @param callable $callback
      */
-    private function assertCallback($callback)
+    protected function assertCallback($callback)
     {
         if (!is_callable($callback)) {
             throw new \InvalidArgumentException('Callback must be callable');
@@ -171,15 +183,14 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     }
 
     /**
-     * @param callable(key:mixed, value:mixed):mixed $callback
-     * @return Map
+     * @param callable (key:mixed, value:mixed):mixed $callback
+     * @return static
      */
     public function map($callback)
     {
-        $callback = $this->callbackParser->parseArrayFunc($callback);
         $this->assertCallback($callback);
 
-        $newMap = self::createFromArray($this->mapArray);
+        $newMap = static::createFromArray($this->mapArray);
 
         foreach ($newMap as $key => $value) {
             $newMap->set($key, $callback($key, $value));
@@ -189,15 +200,14 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     }
 
     /**
-     * @param callable(key:mixed, value:mixed):bool $callback
-     * @return Map
+     * @param callable (key:mixed, value:mixed):bool $callback
+     * @return static
      */
     public function filter($callback)
     {
-        $callback = $this->callbackParser->parseArrayFunc($callback);
         $this->assertCallback($callback);
 
-        $newMap = new self();
+        $newMap = new static();
 
         foreach ($this->mapArray as $key => $value) {
             if ($callback($key, $value)) {
@@ -209,18 +219,18 @@ class Map implements CollectionInterface, \ArrayAccess, \IteratorAggregate, \Cou
     }
 
     /**
-     * @return array
+     * @return ListCollection
      */
     public function keys()
     {
-        return array_keys($this->mapArray);
+        return ListCollection::createFromArray(array_keys($this->mapArray));
     }
 
     /**
-     * @return array
+     * @return ListCollection
      */
     public function values()
     {
-        return array_values($this->mapArray);
+        return ListCollection::createFromArray(array_values($this->mapArray));
     }
 }

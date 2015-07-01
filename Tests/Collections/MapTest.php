@@ -2,12 +2,15 @@
 
 namespace MFCollectionsBundle\Tests\Collections;
 
+use MFCollectionsBundle\Collections\CollectionInterface;
+use MFCollectionsBundle\Collections\ListInterface;
 use MFCollectionsBundle\Collections\Map;
+use MFCollectionsBundle\Collections\MapInterface;
 
 class MapTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Map */
-    private $map;
+    /** @var MapInterface */
+    protected $map;
 
     public function setUp()
     {
@@ -16,6 +19,8 @@ class MapTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldImplementsInterfaces()
     {
+        $this->assertInstanceOf(MapInterface::class, $this->map);
+        $this->assertInstanceOf(CollectionInterface::class, $this->map);
         $this->assertInstanceOf(\ArrayAccess::class, $this->map);
         $this->assertInstanceOf(\IteratorAggregate::class, $this->map);
         $this->assertInstanceOf(\Countable::class, $this->map);
@@ -228,8 +233,8 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey($keyExists, $this->map);
         $this->assertArrayNotHasKey($keyDoesntExist, $this->map);
 
-        $this->assertTrue($this->map->contains($keyExists));
-        $this->assertFalse($this->map->contains($keyDoesntExist));
+        $this->assertTrue($this->map->containsKey($keyExists));
+        $this->assertFalse($this->map->containsKey($keyDoesntExist));
     }
 
     public function testShouldRemoveItem()
@@ -238,16 +243,28 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $key2 = 'key2';
 
         $this->map->set($key, 'value');
-        $this->assertTrue($this->map->contains($key));
+        $this->assertTrue($this->map->containsKey($key));
 
         $this->map[$key2] = 'value2';
-        $this->assertTrue($this->map->contains($key2));
+        $this->assertTrue($this->map->containsKey($key2));
 
         $this->map->remove($key);
-        $this->assertFalse($this->map->contains($key));
+        $this->assertFalse($this->map->containsKey($key));
 
         unset($this->map[$key2]);
-        $this->assertFalse($this->map->contains($key2));
+        $this->assertFalse($this->map->containsKey($key2));
+    }
+
+    public function testShouldContainsValue()
+    {
+        $key = 'key';
+        $value = 1;
+        $valueNotPresented = 4;
+
+        $this->map->set($key, $value);
+
+        $this->assertTrue($this->map->contains($value));
+        $this->assertFalse($this->map->contains($valueNotPresented));
     }
 
     public function testShouldForeachItemInMap()
@@ -332,50 +349,19 @@ class MapTest extends \PHPUnit_Framework_TestCase
     {
         $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
 
-        $this->assertEquals([1, 2, 'three'], $map->keys());
+        $keys = $map->keys();
+
+        $this->assertInstanceOf(ListInterface::class, $keys);
+        $this->assertEquals([1, 2, 'three'], $keys->toArray());
     }
 
     public function testShouldGetValues()
     {
         $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
 
-        $this->assertEquals(['one', 'two', 3], $map->values());
-    }
+        $values = $map->values();
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testShouldThrowExceptionWhenForeachItemInMapWithArrowFunction()
-    {
-        $this->map->each('($k, $v) => {}');
-    }
-
-    public function testShouldMapToNewMapByArrowFunction()
-    {
-        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
-        $newMap = $map->map('($k, $v) => $k . $v');
-
-        $this->assertNotEquals($map, $newMap);
-        $this->assertEquals([1 => '1one', 2 => '2two', 'three' => 'three3'], $newMap->toArray());
-    }
-
-    public function testShouldFilterItemsToNewMapByArrowFunction()
-    {
-        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
-        $newMap = $map->filter('($k, $v) => $k >= 1');
-
-        $this->assertNotEquals($map, $newMap);
-        $this->assertEquals([1 => 'one', 2 => 'two'], $newMap->toArray());
-    }
-
-    public function testShouldCombineMapAndFilterToCreateNewMap()
-    {
-        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
-        $newMap = $map
-            ->filter('($k, $v) => $k >= 1')
-            ->map('($k, $v) => $k . $v');
-
-        $this->assertNotEquals($map, $newMap);
-        $this->assertEquals([1 => '1one', 2 => '2two'], $newMap->toArray());
+        $this->assertInstanceOf(ListInterface::class, $values);
+        $this->assertEquals(['one', 'two', 3], $values->toArray());
     }
 }
