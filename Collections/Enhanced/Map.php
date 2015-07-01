@@ -22,15 +22,7 @@ class Map extends \MFCollectionsBundle\Collections\Map
     public function map($callback)
     {
         $callback = $this->callbackParser->parseArrayFunc($callback);
-        $this->assertCallback($callback);
-
-        $newMap = static::createFromArray($this->mapArray);
-
-        foreach ($newMap as $key => $value) {
-            $newMap->set($key, $callback($key, $value));
-        }
-
-        return $newMap;
+        return parent::map($callback);
     }
 
     /**
@@ -40,16 +32,6 @@ class Map extends \MFCollectionsBundle\Collections\Map
     public function filter($callback)
     {
         $callback = $this->callbackParser->parseArrayFunc($callback);
-        $this->assertCallback($callback);
-
-        $newMap = new static();
-
-        foreach ($this->mapArray as $key => $value) {
-            if ($callback($key, $value)) {
-                $newMap->set($key, $value);
-            }
-        }
-
-        return $newMap;
+        return parent::filter($callback);
     }
 }
