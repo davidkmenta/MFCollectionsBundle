@@ -2,7 +2,7 @@
 
 namespace MFCollectionsBundle\Collections;
 
-class ListCollection implements CollectionInterface, \IteratorAggregate, \Countable
+class ListCollection implements ListInterface
 {
     /** @var array */
     private $listArray;
@@ -149,7 +149,30 @@ class ListCollection implements CollectionInterface, \IteratorAggregate, \Counta
         $index = $this->find($value);
 
         if ($index !== false) {
-            unset($this->listArray[$index]);
+            $this->removeIndex($index);
+        }
+    }
+
+    /**
+     * @param int $index
+     * @param bool $normalize
+     */
+    private function removeIndex($index, $normalize = true)
+    {
+        unset($this->listArray[$index]);
+
+        if ($normalize) {
+            $this->normalize();
+        }
+    }
+
+    private function normalize()
+    {
+        $list = $this->listArray;
+        $this->listArray = [];
+
+        foreach($list as $value) {
+            $this->listArray[] = $value;
         }
     }
 
@@ -158,6 +181,13 @@ class ListCollection implements CollectionInterface, \IteratorAggregate, \Counta
      */
     public function removeAll($value)
     {
-        throw new \Exception('Not implemented yet');
+        $list = $this->listArray;
+        $this->listArray = [];
+
+        foreach($list as $key => $val) {
+            if ($value !== $val) {
+                $this->listArray[] = $val;
+            }
+        }
     }
 }

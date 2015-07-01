@@ -4,6 +4,7 @@ namespace MFCollectionsBundle\Tests\Collections;
 
 use MFCollectionsBundle\Collections\CollectionInterface;
 use MFCollectionsBundle\Collections\ListCollection;
+use MFCollectionsBundle\Collections\ListInterface;
 
 class ListTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,6 +18,7 @@ class ListTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldImplementsInterfaces()
     {
+        $this->assertInstanceOf(ListInterface::class, $this->list);
         $this->assertInstanceOf(CollectionInterface::class, $this->list);
         $this->assertInstanceOf(\IteratorAggregate::class, $this->list);
         $this->assertInstanceOf(\Countable::class, $this->list);
@@ -162,14 +164,111 @@ class ListTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->list->contains($valueDoesntExist));
     }
 
-    public function testShouldRemoveItem()
+    public function testShouldRemoveFirst()
     {
         $value = 'value';
 
         $this->list->add($value);
+        $this->list->add($value);
+
+        $this->assertCount(2, $this->list);
+        $this->assertEquals(2, $this->list->count());
         $this->assertTrue($this->list->contains($value));
 
         $this->list->removeFirst($value);
+
+        $this->assertCount(1, $this->list);
+        $this->assertEquals(1, $this->list->count());
+        $this->assertTrue($this->list->contains($value));
+
+        $this->assertEquals($value, $this->list->first());
+    }
+
+    public function testShouldRemoveAll()
+    {
+        $value = 'value';
+        $value2 = 'value2';
+
+        $this->list->add($value);
+        $this->list->add($value2);
+        $this->list->add($value);
+
+        $this->assertCount(3, $this->list);
+        $this->assertEquals(3, $this->list->count());
+        $this->assertTrue($this->list->contains($value));
+        $this->assertTrue($this->list->contains($value2));
+
+        $this->list->removeAll($value);
+
+        $this->assertCount(1, $this->list);
+        $this->assertEquals(1, $this->list->count());
         $this->assertFalse($this->list->contains($value));
+        $this->assertTrue($this->list->contains($value2));
+    }
+
+    public function testShouldAddValueToEndOfList()
+    {
+        $value = 'value';
+        $value2 = 'value2';
+
+        $this->list->add($value);
+        $this->assertEquals($value, $this->list->last());
+
+        $this->list->add($value2);
+        $this->assertEquals($value2, $this->list->last());
+    }
+
+    public function testShouldUnshiftValue()
+    {
+        $value = 'value';
+        $value2 = 'value2';
+        $valueToUnshift = 'valueToUnshift';
+
+        $this->list->add($value);
+        $this->assertEquals($value, $this->list->first());
+
+        $this->list->add($value2);
+        $this->assertEquals($value, $this->list->first());
+
+        $this->list->unshift($valueToUnshift);
+        $this->assertEquals($valueToUnshift, $this->list->first());
+    }
+
+    public function testShouldShiftValueFromStart()
+    {
+        $firstValue = 'value';
+        $value2 = 'value2';
+
+        $this->list->add($firstValue);
+        $this->list->add($value2);
+        $this->assertCount(2, $this->list);
+
+        $result = $this->list->shift();
+        $this->assertCount(1, $this->list);
+        $this->assertEquals($firstValue, $result);
+    }
+
+    public function testShouldPopValueFromEnd()
+    {
+        $value = 'value';
+        $lastValue = 'value2';
+
+        $this->list->add($value);
+        $this->list->add($lastValue);
+        $this->assertCount(2, $this->list);
+
+        $result = $this->list->pop();
+        $this->assertCount(1, $this->list);
+        $this->assertEquals($lastValue, $result);
+    }
+
+    public function testShouldSortValues()
+    {
+        $list = ListCollection::createFromArray([1, 4, 3, 4, 2, 5, 4]);
+
+        $sortedList = $list->sort();
+
+        $this->assertNotEquals($list, $sortedList);
+        $this->assertEquals([1, 2, 3, 4, 4, 4, 5], $sortedList->toArray());
     }
 }
