@@ -4,7 +4,7 @@ namespace MFCollectionsBundle\Collections\Enhanced;
 
 use MFCollectionsBundle\Services\Parsers\CallbackParser;
 
-class Map extends \MFCollectionsBundle\Collections\Map
+class ListCollection extends \MFCollectionsBundle\Collections\ListCollection
 {
     /** @var CallbackParser */
     private $callbackParser;
@@ -16,7 +16,7 @@ class Map extends \MFCollectionsBundle\Collections\Map
     }
 
     /**
-     * @param callable(key:mixed,value:mixed):mixed $callback
+     * @param callable(value:mixed,index:int):mixed $callback
      * @return static
      */
     public function map($callback)
@@ -26,7 +26,7 @@ class Map extends \MFCollectionsBundle\Collections\Map
     }
 
     /**
-     * @param callable(key:mixed,value:mixed):bool $callback
+     * @param callable(value:mixed,index:int):bool $callback
      * @return static
      */
     public function filter($callback)

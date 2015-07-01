@@ -13,7 +13,7 @@ class CallbackParser
      * @param string $func
      * @return callable
      */
-    public function parseArrayFunc($func)
+    public function parseArrowFunction($func)
     {
         if (is_callable($func)) {
             return $func;

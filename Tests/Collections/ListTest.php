@@ -9,7 +9,7 @@ use MFCollectionsBundle\Collections\ListInterface;
 class ListTest extends \PHPUnit_Framework_TestCase
 {
     /** @var ListCollection */
-    private $list;
+    protected $list;
 
     public function setUp()
     {
