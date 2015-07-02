@@ -33,6 +33,15 @@ class Map implements MapInterface
     }
 
     /**
+     * @param mixed $collection
+     * @return bool
+     */
+    public static function isMap($collection)
+    {
+        return $collection instanceof MapInterface;
+    }
+
+    /**
      * @return \ArrayIterator
      */
     public function getIterator()
@@ -161,6 +170,15 @@ class Map implements MapInterface
     }
 
     /**
+     * At this time only alias of the values() method
+     * @return ListCollection
+     */
+    public function toList()
+    {
+        return $this->values();
+    }
+
+    /**
      * @param callable(key:mixed,value:mixed):void $callback
      */
     public function each($callback)
@@ -232,5 +250,21 @@ class Map implements MapInterface
     public function values()
     {
         return ListCollection::createFromArray(array_values($this->mapArray));
+    }
+
+    /**
+     * @return mixed
+     */
+    public function first()
+    {
+        return reset($this->mapArray);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function last()
+    {
+        return end($this->mapArray);
     }
 }

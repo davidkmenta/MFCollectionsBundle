@@ -3,6 +3,7 @@
 namespace MFCollectionsBundle\Tests\Collections;
 
 use MFCollectionsBundle\Collections\CollectionInterface;
+use MFCollectionsBundle\Collections\ListCollection;
 use MFCollectionsBundle\Collections\ListInterface;
 use MFCollectionsBundle\Collections\Map;
 use MFCollectionsBundle\Collections\MapInterface;
@@ -363,5 +364,26 @@ class MapTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ListInterface::class, $values);
         $this->assertEquals(['one', 'two', 3], $values->toArray());
+    }
+
+    public function testShouldGetTrueIfInstanceOfMapIsPassed()
+    {
+        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+        $this->assertTrue(Map::isMap($map));
+
+        $list = ListCollection::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+        $this->assertFalse(Map::isMap($list));
+    }
+
+    public function testShouldGetLastValue()
+    {
+        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+        $this->assertEquals('one', $map->first());
+    }
+
+    public function testShouldGetFirstValue()
+    {
+        $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+        $this->assertEquals(3, $map->last());
     }
 }
