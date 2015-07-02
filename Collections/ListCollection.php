@@ -174,7 +174,7 @@ class ListCollection implements ListInterface
         $list = $this->listArray;
         $this->listArray = [];
 
-        foreach($list as $value) {
+        foreach ($list as $value) {
             $this->listArray[] = $value;
         }
     }
@@ -187,7 +187,7 @@ class ListCollection implements ListInterface
         $list = $this->listArray;
         $this->listArray = [];
 
-        foreach($list as $key => $val) {
+        foreach ($list as $key => $val) {
             if ($value !== $val) {
                 $this->listArray[] = $val;
             }
