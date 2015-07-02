@@ -5,6 +5,7 @@ namespace MFCollectionsBundle\Tests\Collections;
 use MFCollectionsBundle\Collections\CollectionInterface;
 use MFCollectionsBundle\Collections\ListCollection;
 use MFCollectionsBundle\Collections\ListInterface;
+use MFCollectionsBundle\Collections\Map;
 
 class ListTest extends \PHPUnit_Framework_TestCase
 {
@@ -348,5 +349,22 @@ class ListTest extends \PHPUnit_Framework_TestCase
     public function testShouldThrowInvalidArgumentExceptionOnSettingNotCallableCallbackToFilter()
     {
         $this->list->filter(1);
+    }
+
+    public function testShouldGetTrueIfInstanceOfListIsPassed()
+    {
+        $list = ListCollection::createFromArray(['one', 'two', 3]);
+        $this->assertTrue(ListCollection::isList($list));
+
+        $map = Map::createFromArray(['one', 'two', 3]);
+        $this->assertFalse(ListCollection::isList($map));
+    }
+
+    public function testShouldGetTransformedListToMap()
+    {
+        $list = ListCollection::createFromArray(['one', 'two', 3]);
+
+        $this->assertTrue(Map::isMap($list->toMap()));
+        $this->assertEquals(['one', 'two', 3], $list->toMap()->toArray());
     }
 }

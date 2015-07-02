@@ -32,6 +32,15 @@ class ListCollection implements ListInterface
         return $map;
     }
 
+    /**
+     * @param mixed $collection
+     * @return bool
+     */
+    public static function isList($collection)
+    {
+        return $collection instanceof ListInterface;
+    }
+
     /** @return array */
     public function toArray()
     {
@@ -45,6 +54,14 @@ class ListCollection implements ListInterface
         }
 
         return $array;
+    }
+
+    /**
+     * @return Map
+     */
+    public function toMap()
+    {
+        return Map::createFromArray($this->listArray);
     }
 
     /**

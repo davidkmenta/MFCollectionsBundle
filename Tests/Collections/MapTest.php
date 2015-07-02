@@ -371,7 +371,7 @@ class MapTest extends \PHPUnit_Framework_TestCase
         $map = Map::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
         $this->assertTrue(Map::isMap($map));
 
-        $list = ListCollection::createFromArray([1 => 'one', 2 => 'two', 'three' => 3]);
+        $list = ListCollection::createFromArray(['one', 'two', 3]);
         $this->assertFalse(Map::isMap($list));
     }
 
