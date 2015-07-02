@@ -92,9 +92,7 @@ class ListCollection implements ListInterface
      */
     public function first()
     {
-        $list = $this->listArray;
-
-        return array_shift($list);
+        return reset($this->listArray);
     }
 
     /**
@@ -102,9 +100,7 @@ class ListCollection implements ListInterface
      */
     public function last()
     {
-        $list = $this->listArray;
-
-        return array_pop($list);
+        return end($this->listArray);
     }
 
     /**
