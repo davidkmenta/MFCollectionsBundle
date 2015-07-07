@@ -5,6 +5,12 @@ namespace MFCollectionsBundle\Collections;
 interface MapInterface extends CollectionInterface, \ArrayAccess, \IteratorAggregate, \Countable
 {
     /**
+     * @param mixed $collection
+     * @return bool
+     */
+    public static function isMap($collection);
+
+    /**
      * @param mixed $key
      * @return bool
      */
@@ -42,4 +48,7 @@ interface MapInterface extends CollectionInterface, \ArrayAccess, \IteratorAggre
 
     /** @return ListInterface */
     public function values();
+
+    /** @return ListInterface */
+    public function toList();
 }

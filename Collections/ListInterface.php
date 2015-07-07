@@ -4,6 +4,15 @@ namespace MFCollectionsBundle\Collections;
 
 interface ListInterface extends CollectionInterface, \IteratorAggregate, \Countable
 {
+    /**
+     * @param mixed $collection
+     * @return bool
+     */
+    public static function isList($collection);
+
+    /** @return MapInterface */
+    public function toMap();
+
     /** @param mixed $value */
     public function add($value);
 

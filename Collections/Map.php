@@ -170,15 +170,6 @@ class Map implements MapInterface
     }
 
     /**
-     * At this time only alias of the values() method
-     * @return ListCollection
-     */
-    public function toList()
-    {
-        return $this->values();
-    }
-
-    /**
      * @param callable(key:mixed,value:mixed):void $callback
      */
     public function each($callback)
@@ -242,6 +233,15 @@ class Map implements MapInterface
     public function keys()
     {
         return ListCollection::createFromArray(array_keys($this->mapArray));
+    }
+
+    /**
+     * At this time only alias of the values() method
+     * @return ListCollection
+     */
+    public function toList()
+    {
+        return $this->values();
     }
 
     /**
