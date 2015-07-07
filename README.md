@@ -16,7 +16,7 @@ It's basicly a syntax sugar over and classic array structure, which allows you t
 
 ### Usage:
 
-```
+```php
 $map = new Map();
 $map->set(1, 'one');
 $map[2] = 'two';

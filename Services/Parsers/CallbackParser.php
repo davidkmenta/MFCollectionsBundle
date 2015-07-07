@@ -10,7 +10,7 @@ class CallbackParser
     const ARRAY_FUNCTION_OPERATOR = '=>';
 
     /**
-     * @param string $func
+     * @param string|callable $func
      * @return callable
      */
     public function parseArrowFunction($func)
@@ -27,7 +27,7 @@ class CallbackParser
         $parts = explode(self::ARRAY_FUNCTION_OPERATOR, $func, 2);  // ['($a, $b)', '$a + $b']
         $params = explode(self::ARGUMENT_SEPARATOR, str_replace(['(', ')', ' '], '', $parts[0]));   // ['$a', '$b']
 
-        $this->assertParamsSytax($params);
+        $this->assertParamsSyntax($params);
 
         $functionBody = trim(trim($parts[1], '; {}'), '; ');  // '$a + $b'
 
@@ -66,7 +66,7 @@ class CallbackParser
     /**
      * @param array $params
      */
-    private function assertParamsSytax(array $params)
+    private function assertParamsSyntax(array $params)
     {
         foreach ($params as $param) {
             if (!empty($param) && !preg_match(self::PARAM_REGEX, $param)) {
